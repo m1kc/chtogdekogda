@@ -17,8 +17,12 @@ unigen - генератор фраз и текстов
 Доступные шаблоны:"""
 	ls = require('fs').readdirSync(__dirname).filter (x) -> /.*[.]json/.test x
 	for i in ls
-		w = require("#{__dirname}/#{i}").what
-		console.log " #{i.slice(0,i.length-5)} - #{w}"
+		t = require("#{__dirname}/#{i}")
+		w = t.what
+		vars = 1
+		for zz in t.data
+			vars *= zz.length
+		console.log " #{i.slice(0,i.length-5)} - #{w}, #{vars} вариантов"
 	process.exit 2
 
 data = require("#{__dirname}/#{process.argv[2]}.json").data
