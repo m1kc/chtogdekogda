@@ -25,13 +25,19 @@ unigen - генератор фраз и текстов
 		console.log " #{i.slice(0,i.length-5)} - #{w}, #{vars} вариантов"
 	process.exit 2
 
-data = require("#{__dirname}/#{process.argv[2]}.json").data
+q = require("#{__dirname}/#{process.argv[2]}.json")
+data = q.data
+blacklist = q.blacklist
 
-
-# TODO: blacklist
-
-x = ''
-for i in data
-	x = x + pickRandom(i)
-
-console.log x
+for attempt in [1..100]
+	x = ''
+	for i in data
+		x = x + pickRandom(i)
+	good = true
+	for f in blacklist
+		if x.indexOf(f) >= 0
+			good = false
+	if good
+		console.log x
+		process.exit 0
+console.error "-- Сгенерировано 100 фраз, все в чёрном списке, останов."
